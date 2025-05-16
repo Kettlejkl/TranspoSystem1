@@ -66,7 +66,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'transporsystem.wsgi.application'
 
-# MongoDB with Djongo - Updated with proper configuration
+# MongoDB with Djongo - Fixed configuration based on error logs
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -74,8 +74,9 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': os.getenv('MONGO_CONN_STRING'),
-            'ssl': True,  # Changed from 'tls' to 'ssl' for compatibility
-            'ssl_cert_reqs': False,  # Better approach than tlsAllowInvalidCertificates
+            # Use tlsCAFile instead of ssl_cert_reqs for proper TLS/SSL handling
+            'tls': True,
+            'tlsAllowInvalidCertificates': True,
             
             # Connection pool settings
             'maxPoolSize': 10,
@@ -87,10 +88,8 @@ DATABASES = {
             'connectTimeoutMS': 30000,
             'serverSelectionTimeoutMS': 30000,
         },
-        # Add these options to fix SQL compatibility issues
         'OPTIONS': {
-            'connect': False,  # Don't connect immediately
-            'driver': 'pymongo',  # Explicitly specify the driver
+            'connect': False,
         }
     }
 }

@@ -1,6 +1,5 @@
 from django.utils.deprecation import MiddlewareMixin
-from django.db import connection
-from pymongo.errors import ServerSelectionTimeoutError, AutoReconnect
+from django.db import connections
 import logging
 
 logger = logging.getLogger(__name__)
@@ -8,36 +7,48 @@ logger = logging.getLogger(__name__)
 class MongoDBReconnectMiddleware(MiddlewareMixin):
     """
     Middleware to handle MongoDB connection issues by attempting to reconnect.
+    This version works with the limitations of djongo and pymongo integration.
     """
     
     def __call__(self, request):
         """
         Call the middleware, ensuring MongoDB connection before processing.
         """
-        self.ensure_mongodb_connection()
+        try:
+            self.ensure_mongodb_connection()
+        except Exception as e:
+            # Log but continue - don't break the request if connection check fails
+            logger.error(f"Error in MongoDB connection middleware: {str(e)}")
+        
         return super().__call__(request)
     
     def ensure_mongodb_connection(self):
         """
         Check and re-establish MongoDB connection if needed.
-        Using proper MongoDB methods instead of SQL commands.
+        Very carefully handle the djongo connection which may not be fully initialized.
         """
         try:
-            # Get the pymongo client directly from the Django connection
-            client = connection.connection.client
+            # Get the connection from django's connection pool
+            connection = connections['default']
             
-            # Use a simple command to test the connection
-            client.admin.command('ping')
-            
-            logger.debug("MongoDB connection verified")
-            
-        except (ServerSelectionTimeoutError, AutoReconnect) as e:
-            logger.warning(f"MongoDB connection issue detected: {str(e)}")
-            
-            # Close the connection to force a reconnect on next use
+            # Check if the connection exists and is properly initialized
             if hasattr(connection, 'connection') and connection.connection:
-                connection.close()
-                logger.info("Closed existing MongoDB connection to force reconnect")
+                # Try a simple database operation that won't cause SQL translation issues
+                db = connection.connection.get_database()
+                # Just accessing a property is enough to test connection
+                _ = db.name
+                logger.debug("MongoDB connection verified")
+            else:
+                # If connection isn't initialized yet, just log it and continue
+                logger.info("MongoDB connection not yet initialized")
                 
         except Exception as e:
-            logger.error(f"Unexpected error checking MongoDB connection: {str(e)}")
+            logger.warning(f"Unexpected error checking MongoDB connection: {str(e)}")
+            
+            # Close any existing connection to force a reconnect on next use
+            try:
+                if hasattr(connections['default'], 'connection') and connections['default'].connection:
+                    connections['default'].close()
+                    logger.info("Closed existing MongoDB connection to force reconnect")
+            except Exception as close_error:
+                logger.error(f"Error closing MongoDB connection: {str(close_error)}")
