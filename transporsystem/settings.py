@@ -36,13 +36,15 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    # Move MongoDB reconnect middleware earlier in the stack
+    # to ensure database connection before session processing
+    'tracking.middleware.mongodb_reconnect.MongoDBReconnectMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'tracking.middleware.mongodb_reconnect.MongoDBReconnectMiddleware',
 ]
 
 ROOT_URLCONF = 'transporsystem.urls'
@@ -66,7 +68,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'transporsystem.wsgi.application'
 
-# MongoDB with Djongo - Fixed configuration based on error logs
+# MongoDB with Djongo - Improved configuration for reliability
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -74,25 +76,36 @@ DATABASES = {
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': os.getenv('MONGO_CONN_STRING'),
-            # Use tlsCAFile instead of ssl_cert_reqs for proper TLS/SSL handling
             'tls': True,
             'tlsAllowInvalidCertificates': True,
             
-            # Connection pool settings
-            'maxPoolSize': 10,
-            'minPoolSize': 1,
-            'maxIdleTimeMS': 45000,
+            # Enhanced connection pool settings
+            'maxPoolSize': 50,       # Increased from 10
+            'minPoolSize': 5,        # Increased from 1
+            'maxIdleTimeMS': 300000, # Increased to 5 minutes (from 45 seconds)
             
-            # Timeout settings
-            'socketTimeoutMS': 45000,
-            'connectTimeoutMS': 30000,
-            'serverSelectionTimeoutMS': 30000,
+            # Extended timeout settings
+            'socketTimeoutMS': 60000,           # Increased to 1 minute
+            'connectTimeoutMS': 60000,          # Increased to 1 minute
+            'serverSelectionTimeoutMS': 60000,  # Increased to 1 minute
+            
+            # Connection maintenance settings
+            'heartbeatFrequencyMS': 10000,      # 10 seconds heartbeat
+            'retryWrites': True,
+            'retryReads': True,
+            'waitQueueTimeoutMS': 30000,        # Wait queue timeout
         },
         'OPTIONS': {
-            'connect': False,
+            # Set connect to True to validate connection at startup
+            'connect': True,
         }
     }
 }
+
+# Session configuration - explicitly set to use database
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 24 hours in seconds
+SESSION_SAVE_EVERY_REQUEST = True
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -123,13 +136,20 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Logging for debugging Djongo queries and errors
+# Enhanced logging for debugging Djongo queries and errors
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -142,6 +162,11 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,
+        },
+        'tracking.middleware': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
         },
     },
 }
