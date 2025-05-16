@@ -402,21 +402,51 @@ def register_view(request):
     return render(request, 'tracking/register.html')
 
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+import logging
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+
+logger = logging.getLogger(__name__)
+
 def login_view(request):
     """View for the login page."""
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('main_homepage')
-        else:
-            messages.error(request, "Invalid username or password.")
-            return render(request, 'tracking/login.html')
-    
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        try:
+            # Manual user existence check (to catch DB errors earlier)
+            try:
+                user_check = User.objects.get(username=username)
+                logger.debug(f"User '{username}' found in DB.")
+            except User.DoesNotExist:
+                logger.debug(f"User '{username}' does not exist.")
+            except Exception as e:
+                logger.error(f"Error querying user '{username}': {e}", exc_info=True)
+                messages.error(request, "Login failed due to a database error. Please try again later.")
+                return render(request, 'tracking/login.html')
+
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('main_homepage')
+            else:
+                messages.error(request, "Invalid username or password.")
+
+        except Exception as e:
+            logger.error(f"Login failed for user '{username}': {e}", exc_info=True)
+            messages.error(request, "Login failed due to a server error. Please try again later.")
+
+        return render(request, 'tracking/login.html')
+
     return render(request, 'tracking/login.html')
+
 
 # ✅ AI SUPPORT PAGE VIEW
 @csrf_exempt
