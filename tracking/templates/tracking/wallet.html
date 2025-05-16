@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TranspoSystem | Wallet</title>
+    <link rel="stylesheet" href="{% static 'css/walletstyles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <header>
+        <div class="top-bar">
+            <a href="#"><i class="fas fa-phone"></i> Contact</a>
+            <a href="{% url 'support_chat' %}"><i class="fas fa-question-circle"></i> Support</a>
+        </div>
+        <div class="navbar">
+            <div class="logo">
+                <i class="fas fa-route" style="color: white; font-size: 1.8rem;"></i>
+                <span class="logo-text">TranspoSystem</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'main_homepage' %}">Home</a>
+                <a href="{% url 'map' %}">Routes</a>
+                <a href="{% url 'about_us' %}">About Us</a>
+                <a href="{% url 'wallet' %}">Wallet</a>
+                <a href="{% url 'feedback' %}">Feedback</a>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Search routes...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </header>
+    
+    <section class="wallet-section">
+        <div class="wallet-container">
+            <h1>Your Wallet</h1>
+            <form id="wallet-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="senderNumber"><i class="fas fa-phone"></i> Sender Number:</label>
+                    <input type="tel" id="senderNumber" placeholder="Enter sender number" value="{{ user_profile.sender_number|default:'' }}">
+                </div>
+                <div class="balance-display">
+                    <h2>Your Balance: <span class="currency">$</span><span id="balance" data-initial-balance="{{ user_profile.balance|default:'0.00' }}">{{ user_profile.balance|default:'0.00' }}</span></h2>
+                </div>
+                <div class="form-group">
+                    <label for="amount"><i class="fas fa-dollar-sign"></i> Amount:</label>
+                    <input type="number" id="amount" placeholder="Enter amount" step="0.01" min="0.01">
+                </div>
+                <div class="wallet-actions">
+                    <button type="button" class="action-button deposit" onclick="deposit()">
+                        <i class="fas fa-plus-circle"></i> Deposit
+                    </button>
+                    <button type="button" class="action-button withdraw" onclick="withdraw()">
+                        <i class="fas fa-minus-circle"></i> Withdraw
+                    </button>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cta-button" onclick="showAlert('Submit')">
+                        Submit <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <button type="button" class="cta-button" onclick="showAlert('Send')">
+                        Send <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button type="button" class="secondary-button" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i> Go Back
+                    </button>
+                </div>
+            </form>
+            
+            {% if transactions %}
+            <div class="recent-transactions">
+                <h3>Recent Transactions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.timestamp|date:"M d, Y" }}</td>
+                            <td>{{ transaction.get_action_display }}</td>
+                            <td>${{ transaction.amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2023 TranspoSystem. All rights reserved.</p>
+    </footer>
+    
+    <script src="{% static 'js/wallet.js' %}"></script>
+</body>
+</html>

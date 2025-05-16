@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TranspoSystem - Map</title>
+    <link rel="stylesheet" href="{% static 'css/modulestyles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrRH9ZX68G70Fa_PU8PKxe-NjTKqzSP4&callback=initMap&libraries=&v=weekly" async></script>
+    <script src="{% static 'js/map_function.js' %}"></script>
+</head>
+<body>
+    <!-- Top Bar - Add this above the navigation -->
+    <div class="top-bar">
+        <a href="#"><i class="fas fa-phone"></i> Contact</a>
+        <a href="{% url 'support_chat' %}"><i class="fas fa-question-circle"></i> Support</a>
+    </div>
+    
+    <!-- Navigation - Keep your current navigation style -->
+    <nav>
+        <div class="logo">
+            <a href="{% url 'main_homepage' %}">
+                <i class="fas fa-bus"></i>
+                TranspoSystem
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_homepage' %}">Home</a>
+            <a href="{% url 'map' %}">Routes</a>
+            <a href="{% url 'about_us' %}">About Us</a>
+            <a href="{% url 'wallet' %}">Wallet</a>
+            <a href="{% url 'feedback' %}">Feedback</a>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Search routes...">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area - Keep your current layout -->
+    <div class="content-container">
+        <div class="menu-container">
+            <h2>Menu</h2>
+            <button class="menu-btn" onclick="viewRoute()">
+                <i class="fas fa-route"></i> View Route
+            </button>
+            <button class="menu-btn" onclick="payFare()">
+                <i class="fas fa-money-bill-wave"></i> Pay Fare
+            </button>
+            <button class="menu-btn" onclick="seeVehicleInfo(0)">
+                <i class="fas fa-bus"></i> See Vehicle Info
+            </button>
+            <button class="menu-btn" onclick="checkSeatAvailability()">
+                <i class="fas fa-chair"></i> Check Seat Availability
+            </button>
+        </div>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-controls">
+                <button class="map-control-button" onclick="toggleFullscreen()">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="map-control-button" onclick="resetMap()">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        &copy; 2023 TranspoSystem. All rights reserved.
+    </footer>
+    
+    <script>
+        // Function to toggle fullscreen map
+        function toggleFullscreen() {
+            const mapContainer = document.querySelector('.map-container');
+            if (mapContainer.requestFullscreen) {
+                mapContainer.requestFullscreen();
+            } else if (mapContainer.mozRequestFullScreen) {
+                mapContainer.mozRequestFullScreen();
+            } else if (mapContainer.webkitRequestFullscreen) {
+                mapContainer.webkitRequestFullscreen();
+            } else if (mapContainer.msRequestFullscreen) {
+                mapContainer.msRequestFullscreen();
+            }
+        }
+        
+        // Function to reset map
+        function resetMap() {
+            // Reset map to initial state
+            if (typeof initMap === 'function') {
+                initMap();
+            }
+        }
+    </script>
+</body>
+</html>

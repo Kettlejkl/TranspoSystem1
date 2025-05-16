@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feedback | TranspoSystem</title>
+    <link rel="stylesheet" href="{% static 'css/feedbackstyles.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <!-- Header with top bar and navbar -->
+    <header>
+        <div class="top-bar">
+            <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="{% url 'support_chat' %}"><i class="fas fa-question-circle"></i> Support</a>
+        </div>
+        <div class="navbar">
+            <div class="logo">
+                <i class="fas fa-comments"></i>
+                <span class="logo-text">TranspoSystem</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'main_homepage' %}">Home</a>
+                <a href="{% url 'map' %}">Routes</a>
+                <a href="{% url 'about_us' %}">About Us</a>
+                <a href="{% url 'wallet' %}">Wallet</a>
+                <a href="{% url 'feedback' %}" class="active">Feedback</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="main-content">
+        <!-- Main feedback container -->
+        <div class="feedback-wrapper">
+            <!-- Left side: Feedback form (initially hidden) -->
+    <div id="feedback-form-wrapper" class="feedback-form-wrapper">
+                <h2 class="section-title">We Value Your Feedback</h2>
+                <form id="feedback-form" method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="id_name">Name</label>
+                        <input type="text" name="name" id="id_name" placeholder="Your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        <input type="email" name="email" id="id_email" placeholder="your.email@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_subject">Subject</label>
+                        <input type="text" name="subject" id="id_subject" placeholder="Feedback subject" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <div class="rating-container">
+                            <input type="radio" id="star5" name="rating" value="5">
+                            <label for="star5">★</label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4">★</label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3">★</label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2">★</label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1">★</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_message">Your Message</label>
+                        <textarea name="message" id="id_message" rows="6" placeholder="Please share your experience or suggestions..." required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" id="submit-btn">
+                            Submit Feedback
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button id="cancel-btn" type="button">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Right side: Submitted feedback list -->
+            <div class="submitted-feedback-wrapper">
+                <h2 class="section-title">Recent Feedback</h2>
+                
+                {% if submitted_data %}
+                <div class="submitted-feedback">
+                    <h3>Thank you for your feedback!</h3>
+                    <div class="feedback-details">
+                        <p><strong>Name:</strong> {{ submitted_data.name }}</p>
+                        <p><strong>Subject:</strong> {{ submitted_data.subject }}</p>
+                        <p><strong>Rating:</strong> 
+                            {% for i in submitted_data.rating_stars %}
+                                <i class="fas fa-star" style="color: #FFD700;"></i>
+                            {% endfor %}
+                        </p>
+                        <p><strong>Message:</strong> {{ submitted_data.message }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if all_feedbacks %}
+                    {% for feedback in all_feedbacks %}
+                    <div class="submitted-feedback">
+                        <div class="feedback-header">
+                            <h3>{{ feedback.subject }}</h3>
+                            <div class="rating-display">
+                                {% for i in feedback.rating_stars %}
+                                    <i class="fas fa-star" style="color: #FFD700;"></i>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <p><strong>{{ feedback.name }}</strong> says:</p>
+                        <p class="feedback-message">{{ feedback.message }}</p>
+                        <p class="feedback-date">{{ feedback.created_at|date:"F j, Y" }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-feedback">
+                        <i class="fas fa-comment-slash"></i>
+                        <p>No feedback submitted yet. Be the first to share your thoughts!</p>
+                    </div>
+                {% endif %}
+                
+                <button id="add-post-btn" type="button">
+                    <i class="fas fa-plus-circle"></i> Add New Feedback
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2025 TranspoSystem. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formWrapper = document.getElementById('feedback-form-wrapper');
+            const addPostBtn = document.getElementById('add-post-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const form = document.getElementById('feedback-form');
+            
+            // Show form when Add Post button is clicked
+            addPostBtn.addEventListener('click', function() {
+                formWrapper.classList.add('active');
+                // If you want to add smooth transitions, consider adding this CSS
+                // in your feedbackstyles.css file:
+                // .feedback-form-wrapper {
+                //     opacity: 0;
+                //     visibility: hidden;
+                //     transition: opacity 0.3s ease, visibility 0.3s ease;
+                // }
+                // .feedback-form-wrapper.active {
+                //     opacity: 1;
+                //     visibility: visible;
+                // }
+            });
+            
+            // Hide form when Cancel button is clicked
+            cancelBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent any default behavior
+                formWrapper.classList.remove('active');
+                form.reset(); // Reset form fields
+            });
+            
+            // Form submission handling
+            form.addEventListener('submit', function(e) {
+                // Form validation is handled by HTML5 required attributes
+                // This is just extra space for any custom validation if needed
+                
+                // Uncomment below to prevent actual submission for testing
+                // e.preventDefault();
+                // formWrapper.classList.remove('active');
+                // console.log('Form would be submitted');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TranspoSystem | Modern Transit Solutions</title>
+    <link rel="stylesheet" href="{% static 'css/mainhomepagestyles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+
+<body>
+    <header>
+        <div class="top-bar">
+            <a href="#"><i class="fas fa-phone"></i> Contact</a>
+            <a href="{% url 'support_chat' %}"><i class="fas fa-question-circle"></i> Support</a>
+        </div>
+        <div class="navbar">
+            <div class="logo">
+                <i class="fas fa-route" style="color: white; font-size: 1.8rem;"></i>
+                <span class="logo-text">TranspoSystem</span>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'main_homepage' %}">Home</a>
+                <a href="{% url 'map' %}">Routes</a>
+                <a href="{% url 'about_us' %}">About Us</a>
+                <a href="{% url 'wallet' %}">Wallet</a>
+                <a href="{% url 'feedback' %}">Feedback</a>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Search routes...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 id="mainHeading">Modern Transit Solutions</h1>
+                <p>Experience seamless urban mobility with our integrated transportation platform. Book rides, track routes, and manage payments all in one place.</p>
+                <a href="#" class="cta-button">Book Your Ride <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <i class="fas fa-map-marked-alt"></i>
+                <h3>Smart Routing</h3>
+                <p>Optimized routes based on real-time traffic data</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-chair"></i>
+                <h3>Seat Selection</h3>
+                <p>Choose your preferred seat in advance</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-wallet"></i>
+                <h3>Secure Payments</h3>
+                <p>Multiple payment options with digital wallet</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-bell"></i>
+                <h3>Real-time Updates</h3>
+                <p>Get notified about schedule changes</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 TranspoSystem. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Heading animation
+        const headings = [
+            'Modern Transit Solutions',
+            'Smart Route Planning',
+            'Comfortable Journey',
+            'Secure Transactions'
+        ];
+        
+        let currentIndex = 0;
+        const mainHeading = document.getElementById('mainHeading');
+        
+        function animateHeading() {
+            mainHeading.style.opacity = '0';
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % headings.length;
+                mainHeading.textContent = headings[currentIndex];
+                mainHeading.style.opacity = '1';
+            }, 500);
+        }
+        
+        // Initial delay then start animation
+        setTimeout(() => {
+            setInterval(animateHeading, 4000);
+        }, 2000);
+        
+        // Smooth transitions
+        mainHeading.style.transition = 'opacity 0.5s ease';
+    </script>
+</body>
+</html>
