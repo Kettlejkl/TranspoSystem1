@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# Database
+db.sqlite3
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.sqlite3
+*.mo
+*.env
+
+# Static files
+staticfiles/
+static/
+
+# Node modules (since you have node_modules folder)
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+.DS_Store
