@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-default-key-for-dev')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # Allowed hosts
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
+ALLOWED_HOSTS = ['*']
 
 # Google Maps API Key
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY', '')
