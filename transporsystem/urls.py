@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('tracking.urls')),  # Include tracking app URLs
+    path('keepalive/', include('keepalive.urls')),
 ]
 
 if settings.DEBUG:

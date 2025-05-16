@@ -30,17 +30,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tracking',
+    'keepalive',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files efficiently
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tracking.middleware.mongodb_reconnect.MongoDBReconnectMiddleware',  # Add this line
 ]
 
 ROOT_URLCONF = 'transporsystem.urls'
@@ -64,7 +66,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'transporsystem.wsgi.application'
 
-# MongoDB with Djongo
+# MongoDB with Djongo - Updated with connection pooling
+# MongoDB with Djongo - Updated with connection pooling
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
@@ -74,6 +77,20 @@ DATABASES = {
             'host': os.getenv('MONGO_CONN_STRING'),
             'tls': True,
             'tlsAllowInvalidCertificates': True,  # Only for testing; remove in production
+            
+            # Connection pool settings
+            'maxPoolSize': 10,  # Reduced for free tier
+            'minPoolSize': 1,   # Minimum number of connections
+            'maxIdleTimeMS': 45000,  # How long a connection can remain idle (45 seconds)
+            
+            # Retry settings
+            'retryWrites': True,
+            'retryReads': True,
+            
+            # Timeout settings - adjusted for free tier
+            'socketTimeoutMS': 45000,  # Socket timeout (45 seconds)
+            'connectTimeoutMS': 30000,  # Connection timeout (30 seconds)
+            'serverSelectionTimeoutMS': 30000,  # Server selection timeout (30 seconds)
         }
     }
 }
