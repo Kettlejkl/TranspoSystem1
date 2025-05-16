@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import logging
 
 # Load environment variables
 load_dotenv()
@@ -70,7 +71,9 @@ DATABASES = {
         'NAME': os.getenv('MONGO_DB_NAME', 'TranspoSystem'),
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': os.getenv('MONGO_CONN_STRING', 'mongodb://localhost:27017'),
+            'host': os.getenv('MONGO_CONN_STRING'),
+            'tls': True,
+            'tlsAllowInvalidCertificates': True,  # Only for testing; remove in production
         }
     }
 }
@@ -103,6 +106,29 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Logging for debugging Djongo queries and errors
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'djongo': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
 
 # Optional: Security best practices for production
 # SECURE_SSL_REDIRECT = True
