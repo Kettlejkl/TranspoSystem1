@@ -1,1 +1,1 @@
-web: gunicorn transporsystem.wsgi
+web: gunicorn transporsystem.wsgi --log-file -

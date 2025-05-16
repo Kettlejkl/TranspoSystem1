@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: transporsystem-web
+    env: python
+    plan: starter
+    branch: main
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn transporsystem.wsgi
+    envVars:
+      - key: SECRET_KEY
+        value: "django-insecure-_fmj33b%25wdfdo1d%23wn4%25%24nt0k%28+lcbj3k%28jr74q%40y%26%5E4khsx7"
+      - key: DEBUG
+        value: "True"
+      - key: GOOGLE_MAPS_API_KEY
+        value: "AIzaSyAQrRH9ZX68G70Fa_PU8PKxe-NjTKqzSP4"
+      - key: MONGO_CONN_STRING
+        value: "mongodb+srv://mimestacio:k2RYc5cTHk7M1Wt6@transposystem.a3mmyq2.mongodb.net/?retryWrites=true&w=majority&appName=TranspoSystem"
+      - key: ALLOWED_HOSTS
+        value: "*"
