@@ -1,0 +1,277 @@
+/* Variables */
+:root {
+    --primary: #4169E1;
+    --secondary: #283747;
+    --accent: #3498DB;
+    --light: #ffffff;
+    --dark: #1A2533;
+    --white: #FFFFFF;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    --top-bar-bg: #283747;
+    --nav-bg: #4169E1;
+    --top-bar-height: 32px;
+}
+
+/* General styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                url('https://4kwallpapers.com/images/wallpapers/illuminated-luxury-white-background-3d-background-sci-fi-2560x1080-7666.jpg');
+    background-repeat: no-repeat;
+    background-size: cover; /* Optional: to cover the entire area */
+    background-position: center; /* Optional: to center the image */
+    color: var(--dark);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Top Bar - Add this section */
+.top-bar {
+    background-color: var(--top-bar-bg);
+    padding: 5px 32px;
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1100;
+    height: var(--top-bar-height);
+}
+
+.top-bar a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-left: 16px;
+}
+
+/* Navigation - Update to match your screenshot */
+nav {
+    position: fixed;
+    top: var(--top-bar-height); /* Position below top bar */
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--nav-bg);
+    color: var(--white);
+    padding: 10px 32px;
+    box-shadow: var(--shadow);
+}
+
+.logo a {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.logo i {
+    margin-right: 8px;
+}
+
+.nav-links {
+    display: flex;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 0 15px;
+    font-weight: 500;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 5px 15px;
+    width: 280px;
+}
+
+.search-container input {
+    background: transparent;
+    border: none;
+    padding: 5px;
+    flex-grow: 1;
+    color: var(--white);
+    outline: none;
+}
+
+.search-container input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.search-btn {
+    background: transparent;
+    border: none;
+    color: var(--white);
+    cursor: pointer;
+}
+
+/* Content layout */
+.content-container {
+    display: flex;
+    margin-top: calc(var(--top-bar-height) + 56px); /* Adjust for top bar and nav */
+    padding: 20px;
+    gap: 20px;
+    max-width: 1550px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.menu-container {
+    flex: 0 0 220px;
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    height: calc(95vh - 150px);
+}
+
+.menu-container h2 {
+    color: var(--primary);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.menu-btn {
+    display: block;
+    width: 100%;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.menu-btn:hover {
+    background-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.map-container {
+    flex: 4; /* Make map wider */
+    position: relative;
+    height: calc(95vh - 150px);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+/* Map Controls */
+.map-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.map-control-button {
+    background-color: var(--white);
+    border: none;
+    border-radius: 4px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.map-control-button:hover {
+    background-color: var(--light);
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark);
+    color: var(--white);
+    padding: 16px 0;
+    text-align: center;
+    width: 100%;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .content-container {
+        max-width: 95%;
+    }
+    
+    .map-container {
+        flex: 2.5;
+    }
+}
+
+@media (max-width: 992px) {
+    .map-container {
+        flex: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        padding: 5px 16px;
+    }
+    
+    nav {
+        flex-direction: column;
+        padding: 10px 16px;
+    }
+    
+    .logo, .nav-links, .search-container {
+        margin: 5px 0;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .content-container {
+        flex-direction: column;
+        margin-top: calc(var(--top-bar-height) + 120px); /* Adjust for taller nav on mobile */
+    }
+    
+    .menu-container {
+        width: 100%;
+        margin-bottom: 20px;
+        height: auto;
+        max-height: 300px;
+    }
+    
+    .map-container {
+        height: 500px;
+    }
+}
