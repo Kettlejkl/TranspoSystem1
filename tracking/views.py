@@ -565,7 +565,6 @@ def social_login_error(request):
     )
     return redirect('login')
 
-@login_required
 def main_homepage(request):
     """Main homepage view after login."""
     # Your implementation here
