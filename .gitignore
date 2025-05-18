@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# Django stuff:
+*.log
+db.sqlite3
+*.pot
+*.pyc
+
+# Migrations (ignore generated migration files but keep __init__.py)
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Media files (if uploaded by users)
+media/
+
+# VSCode / PyCharm / IDE stuff
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Node modules (if using npm)
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
