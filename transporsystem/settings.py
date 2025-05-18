@@ -50,7 +50,7 @@ MIDDLEWARE = [
 ]
 
 
-ROOT_URLCONF = 'transposystem.urls'
+ROOT_URLCONF = 'transporsystem.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'transposystem.wsgi.application'
+WSGI_APPLICATION = 'transporsystem.wsgi.application'
 
 # Database configuration - Modified for better Djongo compatibility
 DATABASES = {
