@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TranspoSystem - About Us</title>
+    <link rel="stylesheet" href="{% static 'css/aboutusstyles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="#"><i class="fas fa-phone"></i> Contact</a>
+        <a href="{% url 'support_chat' %}"><i class="fas fa-question-circle"></i> Support</a>
+    </div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <a href="#">
+                <i class="fas fa-bus"></i>
+                TranspoSystem
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_homepage' %}">Home</a>
+            <a href="{% url 'map' %}">Routes</a>
+            <a href="{% url 'about_us' %}">About Us</a>
+            <a href="{% url 'wallet' %}">Wallet</a>
+            <a href="{% url 'feedback' %}">Feedback</a>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Search routes...">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="about-content">
+            <h1 class="about-title">Meet Our Team</h1>
+            
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'images/carbonel.png' %}" alt="Carbonel">
+                    </div>
+                    <div class="member-info">
+                        <h3>Michael Jhon Carbonel</h3>
+                        <p>Frontend Developer</p>
+                        <p class="email">mmjmarcelo@tip.edu.ph</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'images/estacio.jpg' %}" alt="Estacio">
+                    </div>
+                    <div class="member-info">
+                        <h3>Ian Maru Estacio</h3>
+                        <p>Lead Developer</p>
+                        <p class="email">mimestacio@tip.edu.ph</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'images/rosales.jpg' %}" alt="Rosales">
+                    </div>
+                    <div class="member-info">
+                        <h3>Andrei Matthew Rosales</h3>
+                        <p>Backend Developer</p>
+                        <p class="email">mamrosales001@tip.edu.ph</p>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="{% static 'images/vertucio.png' %}" alt="Vertucio">
+                    </div>
+                    <div class="member-info">
+                        <h3>Merlin Joshua Vertucio</h3>
+                        <p>AI Specialist</p>
+                        <p class="email">mmjvertucio@tip.edu.ph</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Go Back
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 TranspoSystem. All rights reserved.
+    </footer>
+    
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

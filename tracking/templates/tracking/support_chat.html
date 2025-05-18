@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Support - TranspoSystem</title>
+    <link rel="stylesheet" href="{% static 'css/modulestyles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .support-container {
+            
+            max-width: 800px;
+            margin: 150px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .chat-entry {
+            margin: 5px 0;
+        }
+        .user-msg { color: #2c3e50; font-weight: bold; }
+        .ai-msg { color: #27ae60; }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #2980b9;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="#"><i class="fas fa-phone"></i> Contact</a>
+        <a href="{% url 'support_chat' %}"><i class="fas fa-question-circle"></i> Support</a>
+    </div>
+
+    <nav>
+        <div class="logo">
+            <a href="{% url 'main_homepage' %}"><i class="fas fa-bus"></i> TranspoSystem</a>
+        </div>
+        <div class="nav-links">
+            <a href="{% url 'main_homepage' %}">Home</a>
+            <a href="{% url 'map' %}">Routes</a>
+            <a href="{% url 'about_us' %}">About Us</a>
+            <a href="{% url 'wallet' %}">Wallet</a>
+            <a href="{% url 'feedback' %}">Feedback</a>
+        </div>
+    </nav>
+
+    <div class="support-container">
+        <h2>AI Support Assistant</h2>
+        <div id="chat-box" class="chat-box"></div>
+        <textarea id="user-message" placeholder="Type your question here..."></textarea>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('user-message');
+            const chatBox = document.getElementById('chat-box');
+            const userMessage = input.value.trim();
+            if (!userMessage) return;
+
+            chatBox.innerHTML += `<div class='chat-entry user-msg'>You: ${userMessage}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const res = await fetch("{% url 'support_chat' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                chatBox.innerHTML += `<div class='chat-entry ai-msg'>AI: ${data.response}</div>`;
+            } else {
+                chatBox.innerHTML += `<div class='chat-entry ai-msg'>Error: ${data.error}</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>

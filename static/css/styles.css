@@ -1,0 +1,37 @@
+:root {
+    --primary: #4169E1;
+    --secondary: #283747;
+    --accent: #3498DB;
+    --light: #ffffff;
+    --dark: #1A2533;
+    --white: #FFFFFF;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Optional: global typography & reset */
+*{
+
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('https://4kwallpapers.com/images/wallpapers/illuminated-luxury-white-background-3d-background-sci-fi-2560x1080-7666.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Divider style */
+.or-divider span {
+    padding: 0 10px;
+    color: #777;
+    font-size: 14px;
+}
