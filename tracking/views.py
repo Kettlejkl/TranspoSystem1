@@ -316,7 +316,6 @@ def vehicles_api(request):
 get_vehicle_data = vehicles_api
 
 
-@login_required
 def wallet_view(request):
     # Get the user's profile or create if it doesn't exist
     user_profile, created = UserProfile.objects.get_or_create(user=request.user)
