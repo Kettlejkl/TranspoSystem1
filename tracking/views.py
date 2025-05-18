@@ -522,7 +522,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             # Redirect to next parameter if available, otherwise to main homepage
-            next_url = request.POST.get('next', 'main_homepage')
+            next_url = request.POST.get('next', 'mainhomepage')
             return redirect(next_url)
         else:
             messages.error(request, "Invalid username or password.")
