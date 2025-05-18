@@ -522,7 +522,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             # Redirect to next parameter if available, otherwise to main homepage
-            next_url = request.POST.get('next', 'mainhomepage')
+            next_url = request.POST.get('next', 'MainHomepage')
             return redirect(next_url)
         else:
             messages.error(request, "Invalid username or password.")
@@ -569,7 +569,7 @@ def social_login_error(request):
 def main_homepage(request):
     """Main homepage view after login."""
     # Your implementation here
-    return render(request, 'tracking/mainhomepage.html')
+    return render(request, 'tracking/MainHomepage.html')
 
 # ✅ AI SUPPORT PAGE VIEW
 @csrf_exempt
